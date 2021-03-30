@@ -9,38 +9,15 @@ function containsObject(obj, list) {
     return false;
 }
 
-var tree_data = { name: '測試樹狀圖', subs: [
-        { name: 'AAA', subs: [
-            { name: 'AAA_1', subs: [
-                { name: 'AAAA_1', subs: [], uplevel: 2, id: 5, detail: { type: 'dir' }},
-            ], uplevel: 1, id: 2, detail: { type: 'dir' }
-            },
-            { name: 'item1', uplevel: 1, id: 11, detail: { type: 'item' }},
-            { name: 'item2', uplevel: 1, id: 12, detail: { type: 'item' }},
-        ], uplevel: 'None', id: 1, detail: { type: 'dir' }
-        },
-        { name: 'BBB', subs: [
-            {name: 'item3', uplevel: 3, id: 13, detail: { type: 'item' }}, 
-            {name: 'item4', uplevel: 3, id: 14, detail: { type: 'item' }},
-        ], uplevel: 'None', id: 3, detail: { type: 'dir' }
-        },
-        { name: 'CCC', subs: [], uplevel: 1000, id: 4, detail: { type: 'dir' }},
-    ], uplevel: 'None', id: 1000, detail: { type: 'dir' }
-};
-
 var treedrag = Vue.component('tree-drag',{
     template: `
-        <item :tree="trees">
+        <item v-if="trees.subs" :tree="trees">
         </item>
     `,
     data: () => ({
         trees: {}
     }),
     created(){
-        const vm = this;
-
-        // get tree data by ajax promise
-        vm.trees = tree_data;
     },
 });
 
@@ -84,9 +61,8 @@ var items = Vue.component('item',{
                 this.open = !this.open
             }
         },
-        dragStart: function(element, event, dragtype, origin_list) {
+        dragStart: function(element, event, dragtype) {
             event.dataTransfer.setData("item", element.id);
-            event.dataTransfer.setData("origin_list", origin_list);
             event.dataTransfer.setData("dragtype", dragtype);
         },
         dropItem: function(node, event) {
@@ -198,10 +174,9 @@ var dropApp = new Vue({
         'item': items
     },
     methods: {
-        dragStart: function(element ,event, dragtype, origin_list) {
+        dragStart: function(element ,event, dragtype) {
             // console.log(element, event);
             event.dataTransfer.setData("item", element.id);
-            event.dataTransfer.setData("origin_list", origin_list);
             event.dataTransfer.setData("dragtype", dragtype);
         },
         dropItem: function(node, event) {
@@ -240,6 +215,31 @@ var dropApp = new Vue({
 
             const tree = vm.$root.$children[0]._data.trees;
             console.log(tree);
+        },
+        loadtree_data(){
+            const vm = this;
+
+            // get tree data by ajax promise
+            var tree_data = { name: '測試樹狀圖', subs: [
+                    { name: 'AAA', subs: [
+                        { name: 'AAA_1', subs: [
+                            { name: 'AAAA_1', subs: [], uplevel: 2, id: 5, detail: { type: 'dir' }},
+                        ], uplevel: 1, id: 2, detail: { type: 'dir' }
+                        },
+                        { name: 'item1', uplevel: 1, id: 11, detail: { type: 'item' }},
+                        { name: 'item2', uplevel: 1, id: 12, detail: { type: 'item' }},
+                    ], uplevel: 'None', id: 1, detail: { type: 'dir' }
+                    },
+                    { name: 'BBB', subs: [
+                        {name: 'item3', uplevel: 3, id: 13, detail: { type: 'item' }}, 
+                        {name: 'item4', uplevel: 3, id: 14, detail: { type: 'item' }},
+                    ], uplevel: 'None', id: 3, detail: { type: 'dir' }
+                    },
+                    { name: 'CCC', subs: [], uplevel: 1000, id: 4, detail: { type: 'dir' }},
+                ], uplevel: 'None', id: 1000, detail: { type: 'dir' }
+            };
+
+            vm.$root.$children[0]._data.trees = tree_data;
         }
     }
 });

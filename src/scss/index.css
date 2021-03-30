@@ -1,0 +1,14 @@
+.file-hover {
+  cursor: pointer;
+}
+
+.file-hover:hover {
+  background-color: #e7e7e7;
+}
+
+.tree-ul {
+  border-left: 1px solid #e7e7e7;
+  padding-left: 30px;
+  margin-left: 12px;
+}
+/*# sourceMappingURL=index.css.map */
